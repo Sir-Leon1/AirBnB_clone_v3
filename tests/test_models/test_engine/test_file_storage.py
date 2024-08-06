@@ -113,3 +113,41 @@ class TestFileStorage(unittest.TestCase):
         with open("file.json", "r") as f:
             js = f.read()
         self.assertEqual(json.loads(string), json.loads(js))
+
+    @unittest.skipIf(models.storage_t == 'db', "not testing db storage")
+    def get_returns_correct_object(self):
+        """Test that get returns the correct object"""
+        user = User(email="test@example.com", password="password")
+        user.save()
+        retrieved_user = self.storage.get(User, user.id)
+        self.assertEqual(retrieved_user, user)
+
+    @unittest.skipIf(models.storage_t == 'db', "not testing db storage")
+    def get_returns_none_for_non_existent_id(self):
+        """Test that get returns None for a non-existent id"""
+        non_existent = self.storage.get(User, "non_existent_id")
+        self.assertIsNone(non_existent)
+
+    @unittest.skipIf(models.storage_t == 'db', "not testing db storage")
+    def count_returns_correct_total_count(self):
+        """Test that count returns the correct total count"""
+        initial_count = self.storage.count()
+        user = User(email="test@example.com", password="password")
+        user.save()
+        new_count = self.storage.count()
+        self.assertEqual(new_count, initial_count + 1)
+
+    @unittest.skipIf(models.storage_t == 'db', "not testing db storage")
+    def count_returns_correct_class_count(self):
+        """Test that count returns the correct count for a specific class"""
+        initial_user_count = self.storage.count(User)
+        user = User(email="test@example.com", password="password")
+        user.save()
+        new_user_count = self.storage.count(User)
+        self.assertEqual(new_user_count, initial_user_count + 1)
+
+    @unittest.skipIf(models.storage_t == 'db', "not testing db storage")
+    def count_returns_zero_for_non_existent_class(self):
+        """Test that count returns 0 for a non-existent class"""
+        non_existent_count = self.storage.count("NonExistentClass")
+        self.assertEqual(non_existent_count, 0)
