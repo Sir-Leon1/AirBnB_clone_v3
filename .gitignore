@@ -1,3 +1,4 @@
 .idea
 __pycache__
-test_get_count.py
+test_checkers.py
+*.json
