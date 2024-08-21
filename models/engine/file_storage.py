@@ -17,6 +17,15 @@ classes = {"Amenity": Amenity, "BaseModel": BaseModel, "City": City,
 
 
 class FileStorage:
+    """handles long term storage of all class instances"""
+    CNC = {"Amenity": Amenity,
+           "City": City,
+           "Place": Place,
+           "Review": Review,
+           "State": State,
+           "User": User
+           }
+
     """serializes instances to a JSON file & deserializes back to instances"""
 
     # string - path to the JSON file
