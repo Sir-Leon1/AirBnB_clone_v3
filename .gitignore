@@ -2,3 +2,6 @@
 __pycache__
 test_checkers.py
 *.json
+test_script.sh
+main_1.py
+tmp_console_main.py
