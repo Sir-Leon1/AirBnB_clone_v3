@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """State objects that handles all default RestFul API actions"""
-from flask import jsonify, request
+from flask import jsonify, request, abort
 from models import storage
 from models.state import State
 from api.v1.views import app_views
@@ -18,9 +18,9 @@ def get_states():
     elif request.method == 'POST':
         data = request.get_json()
         if data is None:
-            return "Not a JSON", 400
+            abort(400, "Not a JSON")
         if 'name' not in data:
-            return "Missing name", 400
+            abort(400, "Missing  name")
         new_state = State(**data)
         new_state.save()
         return jsonify(new_state.to_dict()), 201
@@ -33,7 +33,7 @@ def get_state_id(state_id):
     """
     state = storage.get(State, state_id)
     if state is None:
-        return 404
+        abort(404, "Not found")
 
     if request.method == 'GET':
         return jsonify(BaseModel.to_dict(state))
@@ -44,7 +44,7 @@ def get_state_id(state_id):
     elif request.method == 'PUT':
         data = request.get_json()
         if data is None:
-            return "Not a JSON", 400
+            abort(400, "Not a JSON")
         for key, value in data.items():
             if key not in ['id', 'created_at', 'updated_at']:
                 setattr(state, key, value)
